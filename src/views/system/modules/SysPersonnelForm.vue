@@ -20,8 +20,8 @@
           <a-col :span="12">
             <a-form-model-item label="性别" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="sex">
               <a-radio-group v-model="model.sex">
-                <a-radio value="男" label="男">男</a-radio>
-                <a-radio value="女" label="女">女</a-radio>
+                <a-radio value="1" label="男">男</a-radio>
+                <a-radio value="2" label="女">女</a-radio>
               </a-radio-group>
             </a-form-model-item>
           </a-col>
