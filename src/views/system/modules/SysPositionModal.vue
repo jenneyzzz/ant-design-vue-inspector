@@ -12,6 +12,12 @@
     <a-spin :spinning="confirmLoading">
       <a-form-model ref="form" :model="model" :rules="validatorRules">
 
+        <a-form-model-item label="人员类型" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="user_type">
+          <a-radio-group v-model="model.user_type">
+            <a-radio :value="0" label="内部人员">内部人员</a-radio>
+            <a-radio :value="1" label="外部人员">外部人员</a-radio>
+          </a-radio-group>
+        </a-form-model-item>
         <a-form-model-item
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
@@ -34,6 +40,7 @@
           prop="postRank"
           required
           label="职级"
+          v-if="model.user_type === 0"
         >
           <j-dict-select-tag
             placeholder="请选择职级"
@@ -100,6 +107,7 @@
               }
             ],
           name: [{ required: true, message: '请输入职务名称' }] ,
+          user_type: [{ required: true, message: '请选择职务类别' }] ,
           postRank:  [{ required: true, message: '请选择职级' }] ,
         },
         url: {
