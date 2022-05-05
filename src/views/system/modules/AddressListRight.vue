@@ -103,10 +103,10 @@
           //   dataIndex: 'phone'
           // },
           {
-            title: '公司邮箱',
+            title: '在岗状态',
             width: '15%',
             align: 'center',
-            dataIndex: 'email'
+            dataIndex: 'workStatus'
           }
         ],
         url: {

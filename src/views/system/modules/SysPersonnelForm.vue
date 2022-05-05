@@ -36,7 +36,7 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
-            <a-form-model-item label="职务" :labelCol="labelCol" :wrapperCol="wrapperCol">
+            <a-form-model-item label="职务" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="post">
               <j-select-position placeholder="请选择职务" :multiple="false" v-model="model.post" returnId='true'/>
             </a-form-model-item>
           </a-col>

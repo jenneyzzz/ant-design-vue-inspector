@@ -8,10 +8,13 @@
       </a-form>
     </div>
     <!-- 查询区域-END -->
-
+    <div class="tab-wrap">
+      <a-tabs :tabBarStyle="{margin: 0}" @change="changeTabs" :activeKey="tabs.active()">
+        <a-tab-pane v-for="item in tabs" :tab="item.title" :key="item.key"></a-tab-pane>
+      </a-tabs>
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+      <a-button @click="handleAdd" type="primary" icon="plus">新增---</a-button>
       <a-button type="primary" icon="download" @click="handleExportXls('人员管理')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
@@ -24,6 +27,7 @@
         </a-menu>
         <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>
       </a-dropdown>
+    </div>
     </div>
 
     <!-- table区域-begin -->
@@ -180,6 +184,10 @@
         },
         dictOptions:{},
         superFieldList:[],
+        tabs:[
+          {title:'内部人员',key:0},
+          {title:'外部人员',key:1},
+        ]
       }
     },
     created() {
@@ -209,10 +217,17 @@
         fieldList.push({type:'sel_depart',value:'unit',text:'所属单位'})
         fieldList.push({type:'sel_depart',value:'departId',text:'所属部门'})
         this.superFieldList = fieldList
+      },
+      changeTabs(e){
+        console.log('changeTabs',e)
       }
     }
   }
 </script>
 <style scoped>
   @import '~@assets/less/common.less';
+  .tab-wrap{
+    display: flex;
+    justify-content: space-between;
+  }
 </style>
