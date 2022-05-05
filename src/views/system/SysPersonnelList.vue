@@ -9,9 +9,9 @@
     </div>
     <!-- 查询区域-END -->
     <div class="tab-wrap">
-      <a-tabs :tabBarStyle="{margin: 0}" @change="changeTabs" :activeKey="tabs.active()">
+      <!-- <a-tabs :tabBarStyle="{margin: 0}" @change="changeTabs" :activeKey="tabs.active()">
         <a-tab-pane v-for="item in tabs" :tab="item.title" :key="item.key"></a-tab-pane>
-      </a-tabs>
+      </a-tabs> -->
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>

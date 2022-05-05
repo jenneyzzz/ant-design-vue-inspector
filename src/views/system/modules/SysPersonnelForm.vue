@@ -20,8 +20,8 @@
           <a-col :span="12">
             <a-form-model-item label="性别" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="sex">
               <a-radio-group v-model="model.sex">
-                <a-radio value="1" label="男">男</a-radio>
-                <a-radio value="2" label="女">女</a-radio>
+                <a-radio :value="1" label="男">男</a-radio>
+                <a-radio :value="2" label="女">女</a-radio>
               </a-radio-group>
             </a-form-model-item>
           </a-col>
@@ -32,17 +32,17 @@
           </a-col>
           <a-col :span="12">
             <a-form-model-item label="身份证号" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="id_no">
-              <j-date placeholder="请输入身份证号" v-model="model.id_no"  style="width: 100%" />
+              <a-input placeholder="请输入身份证号" v-model="model.id_no"  style="width: 100%" />
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
             <a-form-model-item label="职务" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="post">
-              <j-select-position placeholder="请选择职务" :multiple="false" v-model="model.post" returnId='true'/>
+              <j-select-position placeholder="请选择职务" :multiple="false" v-model="model.post" returnId='true' />
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
-            <a-form-model-item label="工号/警号" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="policeNo">
-              <a-input v-model="model.policeNo" placeholder="请输入工号/警号"  ></a-input>
+            <a-form-model-item label="工号/警号" :rule="model.user_type===1?validatorRules.policeNum:validatorRules.policeNo" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <a-input v-model="model.policeNo" :placeholder="model.user_type===1?'工号':'请输入工号/警号'"  ></a-input>
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
@@ -53,8 +53,8 @@
           <a-col :span="12">
             <a-form-model-item label="毕业专业" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="specialty">
               <a-select placeholder="请选择毕业专业" v-model="model.specialty">
-                <a-select-option v-for="items in specialty_List" :key="items" :value="items">
-                    {{items}}
+                <a-select-option v-for="items in specialty_list" :key="items.label" :value="items.value">
+                    {{items.label}}
                 </a-select-option>
               </a-select>
             </a-form-model-item>
@@ -62,11 +62,10 @@
           <a-col :span="12">
             <a-form-model-item label="毕业院校" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="graduate_from">
               <a-select placeholder="请选择毕业院校" v-model="model.graduate_from">
-                <a-select-option v-for="items in graduate_from_list" :key="items" :value="items">
-                    {{items}}
+                <a-select-option v-for="items in graduate_from_list" :key="items.label" :value="items.value">
+                    {{items.label}}
                 </a-select-option>
               </a-select>
-              <!-- <j-dict-select-tag type="list" v-model="model.graduate_from" dictCode="graduate_from" placeholder="请选择毕业专业" /> -->
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
@@ -81,10 +80,9 @@
           </a-col>
           <a-col :span="12">
             <a-form-model-item label="办案经验" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="handle_case_exper">
-              <!-- <j-dict-select-tag type="list" v-model="model.handle_case_exper" dictCode="handle_case_exper" placeholder="请选择办案经验" /> -->
               <a-select placeholder="请选择办案经验" v-model="model.handle_case_exper">
-                <a-select-option v-for="items in handle_case_exper_list" :key="items" :value="items">
-                    {{items}}
+                <a-select-option v-for="items in handle_case_exper_list" :key="items.label" :value="items.value">
+                    {{items.label}}
                 </a-select-option>
               </a-select>
             </a-form-model-item>
@@ -100,13 +98,13 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
-            <a-form-model-item label="头像" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="avatar">
-              <j-image-upload isMultiple  v-model="model.avatar" ></j-image-upload>
+            <a-form-model-item label="所属部门" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="departId">
+              <j-select-depart v-model="model.departId" multi  />
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
-            <a-form-model-item label="所属部门" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="departId">
-              <j-select-depart v-model="model.departId" multi  />
+            <a-form-model-item label="头像" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="avatar">
+              <j-image-upload isMultiple  v-model="model.avatar" ></j-image-upload>
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -146,6 +144,9 @@
         },
         confirmLoading: false,
         validatorRules: {
+          user_type: [
+              { required: true, message: '请选择人员类型!'},
+           ],
            name: [
               { required: true, message: '请输入姓名!'},
            ],
@@ -155,6 +156,9 @@
            post: [
               { required: true, message: '请输入职务!'},
            ],
+           policeNum: [
+              { required: false, message: ''},
+           ],
            policeNo: [
               { required: true, message: '请输入工号/警号!'},
            ],
@@ -162,7 +166,7 @@
               { required: true, message: '请输入学历!'},
            ],
            specialty: [
-              { required: true, message: '请输入专业!'},
+              { required: true, message: '请选择专业!'},
            ],
            workStatus: [
               { required: true, message: '请输入在岗状态!'},
@@ -196,6 +200,8 @@
     created () {
        //备份model原始值
       this.modelDefault = JSON.parse(JSON.stringify(this.model));
+    },
+    mounted(){
       this.getDictData({code:'bananjingyan'});
       this.getDictData({code:'biyezhuanye'});
       this.getDictData({code:'biyeyuanxiao'});
@@ -239,8 +245,18 @@
       },
       getDictData(param){
         getDictItemsByCode(param).then((res)=>{
-          console.log('param',param)
-          console.log('res',res)
+          switch(param.code){
+            case "bananjingyan":
+              this.handle_case_exper_list = res
+              break;
+            case "biyeyuanxiao":
+              this.graduate_from_list = res
+              break;
+            case "biyezhuanye":
+              this.specialty_list = res
+              console.log('dsddsdf',this.specialty_list)
+              break;
+          }
         })
       }
     }
