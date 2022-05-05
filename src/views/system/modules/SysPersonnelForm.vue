@@ -4,23 +4,35 @@
       <a-form-model ref="form" :model="model" :rules="validatorRules" slot="detail">
         <a-row>
           <a-col :span="12">
+            <a-form-model-item label="人员类型" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="user_type">
+              <a-radio-group v-model="model.user_type">
+                <a-radio :value="0" label="内部人员">内部人员</a-radio>
+                <a-radio :value="1" label="外部人员">外部人员</a-radio>
+              </a-radio-group>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="12">
             <a-form-model-item label="姓名" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="name">
               <a-input v-model="model.name" placeholder="请输入姓名"  ></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12">
-            <a-form-model-item label="头像" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="avatar">
-              <j-image-upload isMultiple  v-model="model.avatar" ></j-image-upload>
-            </a-form-model-item>
-          </a-col>
+          
           <a-col :span="12">
             <a-form-model-item label="性别" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="sex">
-              <j-dict-select-tag type="list" v-model="model.sex" dictCode="sex" placeholder="请选择性别" />
+              <a-radio-group v-model="model.sex">
+                <a-radio value="男" label="男">男</a-radio>
+                <a-radio value="女" label="女">女</a-radio>
+              </a-radio-group>
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
-            <a-form-model-item label="生日" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="birthday">
-              <j-date placeholder="请选择生日" v-model="model.birthday"  style="width: 100%" />
+            <a-form-model-item label="出生日期" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="birthday">
+              <j-date placeholder="请选择出生日期" v-model="model.birthday"  style="width: 100%" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-model-item label="身份证号" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="id_no">
+              <j-date placeholder="请输入身份证号" v-model="model.id_no"  style="width: 100%" />
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
@@ -39,8 +51,22 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
-            <a-form-model-item label="专业" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="specialty">
-              <a-input v-model="model.specialty" placeholder="请输入专业"  ></a-input>
+            <a-form-model-item label="毕业专业" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="specialty">
+              <a-select placeholder="请选择毕业专业" v-model="model.specialty">
+                <a-select-option v-for="items in specialty_List" :key="items" :value="items">
+                    {{items}}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-model-item label="毕业院校" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="graduate_from">
+              <a-select placeholder="请选择毕业院校" v-model="model.graduate_from">
+                <a-select-option v-for="items in graduate_from_list" :key="items" :value="items">
+                    {{items}}
+                </a-select-option>
+              </a-select>
+              <!-- <j-dict-select-tag type="list" v-model="model.graduate_from" dictCode="graduate_from" placeholder="请选择毕业专业" /> -->
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
@@ -54,6 +80,16 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
+            <a-form-model-item label="办案经验" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="handle_case_exper">
+              <!-- <j-dict-select-tag type="list" v-model="model.handle_case_exper" dictCode="handle_case_exper" placeholder="请选择办案经验" /> -->
+              <a-select placeholder="请选择办案经验" v-model="model.handle_case_exper">
+                <a-select-option v-for="items in handle_case_exper_list" :key="items" :value="items">
+                    {{items}}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="12">
             <a-form-model-item label="手机号" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="phone">
               <a-input v-model="model.phone" placeholder="请输入手机号"  ></a-input>
             </a-form-model-item>
@@ -61,6 +97,11 @@
           <a-col :span="12">
             <a-form-model-item label="所属单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="unit">
               <j-select-depart v-model="model.unit" multi  />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-model-item label="头像" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="avatar">
+              <j-image-upload isMultiple  v-model="model.avatar" ></j-image-upload>
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
@@ -76,7 +117,7 @@
 
 <script>
 
-  import { httpAction, getAction } from '@/api/manage'
+  import { httpAction, getAction, getDictItemsByCode } from '@/api/manage'
   import { validateDuplicateValue } from '@/utils/util'
 
   export default {
@@ -111,9 +152,6 @@
            sex: [
               { required: true, message: '请输入性别!'},
            ],
-           birthday: [
-              { required: true, message: '请输入生日!'},
-           ],
            post: [
               { required: true, message: '请输入职务!'},
            ],
@@ -126,11 +164,11 @@
            specialty: [
               { required: true, message: '请输入专业!'},
            ],
-           expertise: [
-              { required: true, message: '请输入特长!'},
-           ],
            workStatus: [
               { required: true, message: '请输入在岗状态!'},
+           ],
+           id_no: [
+              { required: true, message: '请输入身份证号!'},
            ],
            phone: [
               { required: true, message: '请输入手机号!'},
@@ -138,16 +176,16 @@
            ],
            unit: [
               { required: true, message: '请输入所属单位!'},
-           ],
-           departId: [
-              { required: true, message: '请输入所属部门!'},
-           ],
+           ]
         },
         url: {
           add: "/system/sysPersonnel/add",
           edit: "/system/sysPersonnel/edit",
           queryById: "/system/sysPersonnel/queryById"
-        }
+        },
+        specialty_list:[], // 毕业专业
+        graduate_from_list:[],// 毕业院校
+        handle_case_exper_list:[] // 办案经验
       }
     },
     computed: {
@@ -158,6 +196,9 @@
     created () {
        //备份model原始值
       this.modelDefault = JSON.parse(JSON.stringify(this.model));
+      this.getDictData({code:'bananjingyan'});
+      this.getDictData({code:'biyezhuanye'});
+      this.getDictData({code:'biyeyuanxiao'});
     },
     methods: {
       add () {
@@ -196,6 +237,12 @@
          
         })
       },
+      getDictData(param){
+        getDictItemsByCode(param).then((res)=>{
+          console.log('param',param)
+          console.log('res',res)
+        })
+      }
     }
   }
 </script>

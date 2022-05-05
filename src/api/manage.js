@@ -7,7 +7,8 @@ const api = {
   role: '/mock/api/role',
   service: '/mock/api/service',
   permission: '/mock/api/permission',
-  permissionNoPager: '/mock/api/permission/no-pager'
+  permissionNoPager: '/mock/api/permission/no-pager',
+  dictItemsByCode:'/sys/api/queryDictItemsByCode'
 }
 
 export default api
@@ -194,4 +195,17 @@ export function getFileAccessHttpUrl(avatar,subStr) {
   }catch(err){
    return;
   }
+}
+/**
+ * 获取办案经验，毕业专业，毕业院校
+ * @param url
+ * @param parameter
+ * @returns {*}
+ */
+export function getDictItemsByCode(parameter) {
+  return axios({
+    url: api.dictItemsByCode,
+    method: 'get',
+    params: parameter
+  })
 }
