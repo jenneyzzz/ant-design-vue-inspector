@@ -254,7 +254,6 @@
               break;
             case "biyezhuanye":
               this.specialty_list = res
-              console.log('dsddsdf',this.specialty_list)
               break;
           }
         })
