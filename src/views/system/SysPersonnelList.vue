@@ -9,9 +9,9 @@
     </div>
     <!-- 查询区域-END -->
     <div class="tab-wrap">
-      <!-- <a-tabs :tabBarStyle="{margin: 0}" @change="changeTabs" :activeKey="tabs.active()">
-        <a-tab-pane v-for="item in tabs" :tab="item.title" :key="item.key"></a-tab-pane>
-      </a-tabs> -->
+      <a-radio-group buttonStyle="solid" :value="sendParam.userType" @change="(e)=>handleChangeCommon(e.target.value)">
+        <a-radio-button v-for="item in tabs" :key="item.key" :value="item.key">{{ item.value }}</a-radio-button>
+      </a-radio-group>
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
@@ -185,9 +185,10 @@
         dictOptions:{},
         superFieldList:[],
         tabs:[
-          {title:'内部人员',key:0},
-          {title:'外部人员',key:1},
-        ]
+          {value:'内部人员',key:0},
+          {value:'外部人员',key:1},
+        ],
+        sendParam:{ userType:0 }
       }
     },
     created() {
@@ -218,8 +219,8 @@
         fieldList.push({type:'sel_depart',value:'departId',text:'所属部门'})
         this.superFieldList = fieldList
       },
-      changeTabs(e){
-        console.log('changeTabs',e)
+      handleChangeCommon(e){
+        this.sendParam.userType = e
       }
     }
   }
