@@ -4,8 +4,8 @@
       <a-form-model ref="form" :model="model" :rules="validatorRules" slot="detail">
         <a-row>
           <a-col :span="12">
-            <a-form-model-item label="人员类型" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="user_type">
-              <a-radio-group v-model="model.user_type">
+            <a-form-model-item label="人员类型" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="userType">
+              <a-radio-group v-model="model.userType">
                 <a-radio :value="0" label="内部人员">内部人员</a-radio>
                 <a-radio :value="1" label="外部人员">外部人员</a-radio>
               </a-radio-group>
@@ -31,18 +31,21 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
-            <a-form-model-item label="身份证号" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="id_no">
-              <a-input placeholder="请输入身份证号" v-model="model.id_no"  style="width: 100%" />
+            <a-form-model-item label="身份证号" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="idNo">
+              <a-input placeholder="请输入身份证号" v-model="model.idNo"  style="width: 100%" />
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
             <a-form-model-item label="职务" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="post">
-              <j-select-position placeholder="请选择职务" :multiple="false" v-model="model.post" returnId='true' />
+              <j-select-position placeholder="请选择职务" :multiple="false" v-model="model.post" :userType="model.userType" />
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
-            <a-form-model-item label="工号/警号" :rule="model.user_type===1?validatorRules.policeNum:validatorRules.policeNo" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-input v-model="model.policeNo" :placeholder="model.user_type===1?'工号':'请输入工号/警号'"  ></a-input>
+            <a-form-model-item v-if="model.userType!==1" label="工号/警号" prop="policeNo" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <a-input v-model="model.policeNo" placeholder="请输入工号/警号"  ></a-input>
+            </a-form-model-item>
+            <a-form-model-item v-else label="工号" prop="policeNum" :labelCol="labelCol" :wrapperCol="wrapperCol">
+              <a-input v-model="model.policeNo" placeholder="工号"  ></a-input>
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
@@ -60,9 +63,9 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
-            <a-form-model-item label="毕业院校" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="graduate_from">
-              <a-select placeholder="请选择毕业院校" v-model="model.graduate_from">
-                <a-select-option v-for="items in graduate_from_list" :key="items.label" :value="items.value">
+            <a-form-model-item label="毕业院校" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="graduateFrom">
+              <a-select placeholder="请选择毕业院校" v-model="model.graduateFrom">
+                <a-select-option v-for="items in graduateFromList" :key="items.label" :value="items.value">
                     {{items.label}}
                 </a-select-option>
               </a-select>
@@ -79,9 +82,9 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
-            <a-form-model-item label="办案经验" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="handle_case_exper">
-              <a-select placeholder="请选择办案经验" v-model="model.handle_case_exper">
-                <a-select-option v-for="items in handle_case_exper_list" :key="items.label" :value="items.value">
+            <a-form-model-item label="办案经验" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="handleCaseExper">
+              <a-select placeholder="请选择办案经验" v-model="model.handleCaseExper">
+                <a-select-option v-for="items in handleCaseExperList" :key="items.label" :value="items.value">
                     {{items.label}}
                 </a-select-option>
               </a-select>
@@ -144,7 +147,7 @@
         },
         confirmLoading: false,
         validatorRules: {
-          user_type: [
+          userType: [
               { required: true, message: '请选择人员类型!'},
            ],
            name: [
@@ -171,7 +174,7 @@
            workStatus: [
               { required: true, message: '请输入在岗状态!'},
            ],
-           id_no: [
+           idNo: [
               { required: true, message: '请输入身份证号!'},
            ],
            phone: [
@@ -188,8 +191,8 @@
           queryById: "/system/sysPersonnel/queryById"
         },
         specialty_list:[], // 毕业专业
-        graduate_from_list:[],// 毕业院校
-        handle_case_exper_list:[] // 办案经验
+        graduateFromList:[],// 毕业院校
+        handleCaseExperList:[] // 办案经验
       }
     },
     computed: {
@@ -247,10 +250,10 @@
         getDictItemsByCode(param).then((res)=>{
           switch(param.code){
             case "bananjingyan":
-              this.handle_case_exper_list = res
+              this.handleCaseExperList = res
               break;
             case "biyeyuanxiao":
-              this.graduate_from_list = res
+              this.graduateFromList = res
               break;
             case "biyezhuanye":
               this.specialty_list = res
