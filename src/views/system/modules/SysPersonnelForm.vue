@@ -5,7 +5,7 @@
         <a-row>
           <a-col :span="12">
             <a-form-model-item label="人员类型" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="userType">
-              <a-radio-group v-model="model.userType">
+              <a-radio-group v-model="model.userType" @change="changeUserType">
                 <a-radio :value="0" label="内部人员">内部人员</a-radio>
                 <a-radio :value="1" label="外部人员">外部人员</a-radio>
               </a-radio-group>
@@ -37,7 +37,7 @@
           </a-col>
           <a-col :span="12">
             <a-form-model-item label="职务" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="post">
-              <j-select-position placeholder="请选择职务" :multiple="false" v-model="model.post" :userType="model.userType" />
+              <j-select-position placeholder="请选择职务" :multiple="false" v-model="model.post" :usertype="model.userType" />
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
@@ -192,7 +192,8 @@
         },
         specialty_list:[], // 毕业专业
         graduateFromList:[],// 毕业院校
-        handleCaseExperList:[] // 办案经验
+        handleCaseExperList:[], // 办案经验
+        sendParam:{ userType:"" }
       }
     },
     computed: {
@@ -210,6 +211,11 @@
       this.getDictData({code:'biyeyuanxiao'});
     },
     methods: {
+      changeUserType(e){
+        this.model.userType = e.target.value
+        this.sendParam.userType = this.model.userType
+        console.log('this.model.userType',this.model.userType)
+      },
       add () {
         this.edit(this.modelDefault);
       },

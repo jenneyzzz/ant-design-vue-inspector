@@ -221,6 +221,7 @@
       },
       handleChangeCommon(e){
         this.sendParam.userType = e
+        this.loadData(1)
       }
     }
   }

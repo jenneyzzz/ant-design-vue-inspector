@@ -1,5 +1,5 @@
 <template>
-  <j-select-biz-component :width="1000" v-bind="configs" v-on="$listeners"/>
+  <j-select-biz-component :width="1000" v-bind="configs" :sendParam="sendParam" v-on="$listeners"/>
 </template>
 
 <script>
@@ -8,7 +8,7 @@
   export default {
     name: 'JSelectPosition',
     components: { JSelectBizComponent },
-    props: ['value'],
+    props: ['value','usertype'],
     data() {
       return {
         settings: {
@@ -23,14 +23,23 @@
             { title: '职务编码', dataIndex: 'code', align: 'center', width: '35%' },
             { title: '职级', dataIndex: 'rank_dictText', align: 'center', width: '25%' }
           ]
-        }
+        },
+        sendParam:{ userType:"" }
       }
     },
     computed: {
       configs() {
         return Object.assign({ value: this.value }, this.settings, this.$attrs)
       }
-    }
+    },
+    watch: {
+      usertype: {
+        immediate: true,
+        handler(val) {
+          this.sendParam.userType = val
+        }
+      }
+    },
   }
 </script>
 

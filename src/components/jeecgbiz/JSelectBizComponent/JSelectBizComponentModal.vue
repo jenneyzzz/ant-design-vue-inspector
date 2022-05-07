@@ -139,6 +139,10 @@
         type: Number,
         default: 12
       },
+      sendParam:{
+        type:Object,
+        default:{ userType:'' }
+      }
     },
     data() {
       return {
@@ -202,6 +206,14 @@
       },
     },
     watch: {
+      sendParam:{
+        deep: true,
+        immediate: true,
+        handler(val) {
+          console.log('jee index',val)
+          this.loadData(1)
+        }
+      },
       value: {
         deep: true,
         immediate: true,

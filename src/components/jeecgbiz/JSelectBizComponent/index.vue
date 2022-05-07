@@ -25,6 +25,7 @@
       v-model="selectValue"
       :visible.sync="visible"
       v-bind="modalProps"
+      :sendParam="sendParam"
       @options="handleOptions"
     />
   </a-row>
@@ -79,6 +80,10 @@
         type: String,
         default: '选择'
       },
+      sendParam:{
+        type:Object,
+        default:{ userType:'' }
+      }
 
     },
     data() {
